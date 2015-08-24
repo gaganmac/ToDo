@@ -17,8 +17,10 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIUHEWM9j0AUV5j5ZOhV759mS44fZFsD4xzf1f2A" />
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIUHEWM9j0AUV5j5ZOhV759mS44fZFsD4xzf1f2A" />
+
     </application>
 
 </manifest>
-

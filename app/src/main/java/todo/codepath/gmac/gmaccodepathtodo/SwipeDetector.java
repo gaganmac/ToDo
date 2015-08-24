@@ -1,6 +1,11 @@
 package todo.codepath.gmac.gmaccodepathtodo;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Context;
+import android.gesture.Gesture;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
@@ -18,18 +23,20 @@ public class SwipeDetector implements View.OnTouchListener
     private ListView mListView;
     private ToDoListAdapter mAdapter;
     private int mPosition;
+    private Context mContext;
 
-    public SwipeDetector(ToDoListAdapter adapter, ListView listView, ToDoListItemContainer h, int pos)
+    public SwipeDetector(Context context, ToDoListAdapter adapter, ListView listView, ToDoListItemContainer h, int pos)
     {
         mToDoListItemContainer = h;
         mListView = listView;
         mAdapter = adapter;
         mPosition = pos;
+        mContext = context;
 
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event)
+    public boolean onTouch(final View v, final MotionEvent event)
     {
         switch (event.getAction())
         {
@@ -54,7 +61,7 @@ public class SwipeDetector implements View.OnTouchListener
                 {
                     mToDoListItemContainer.getDeleteView().setVisibility(View.GONE);
                 }
-                else
+                else if (deltaX > MIN_LOCK_DISTANCE)
                 {
                     // if first swiped left and then swiped right
                     mToDoListItemContainer.getDeleteView().setVisibility(View.VISIBLE);
@@ -77,6 +84,7 @@ public class SwipeDetector implements View.OnTouchListener
                 {
                     Log.i(TAG, "NO Swipe action up");
                     swipe(0);
+                    v.performClick();
                 }
 
                 if (mListView != null)
@@ -104,5 +112,7 @@ public class SwipeDetector implements View.OnTouchListener
         params.leftMargin = distance;
         animationView.setLayoutParams(params);
     }
+
+
 }
 
