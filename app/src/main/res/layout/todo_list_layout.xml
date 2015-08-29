@@ -18,17 +18,17 @@
         android:layout_above="@+id/saveButton"
         android:layout_alignParentTop="true" />
 
-    <EditText
+    <!--EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/newToDoItem"
         android:inputType="textMultiLine|textAutoCorrect|textAutoComplete"
-        android:hint="@string/hintText"
+        android:hint="@string/hint_text"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/saveButton"
-        android:layout_toStartOf="@+id/saveButton" />
+        android:layout_toStartOf="@+id/saveButton" /-->
 
     <Button
         android:layout_width="wrap_content"
@@ -37,6 +37,6 @@
         android:id="@+id/saveButton"
         android:onClick="onAddItem"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

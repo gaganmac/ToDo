@@ -8,27 +8,27 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DateTimeView;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 public class EditTaskDialogFragment extends DialogFragment implements TextView.OnEditorActionListener
 {
+    private ToDoItem mToDoItem = new ToDoItem("", "");
     private EditText mEditText;
+    private DateTimeView mDateTimeView;
     private EditTaskDialogListener mDialogListener;
+    private int mDialogReason;
 
 
     public interface EditTaskDialogListener
     {
         public void onDialogPositiveClick(final DialogFragment dialog, final Object text);
-        void onFinishEditDialog(String inputText);
+        void onFinishEditDialog(final ToDoItem toDoItem);
+        void onFinishAddDialog(final ToDoItem toDoItem);
     }
 
     @Override
@@ -53,11 +53,9 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
     {
     }
 
-    public static EditTaskDialogFragment newInstance(final Context context, final String currentEntry)
+    public static EditTaskDialogFragment newInstance(final Bundle args)
     {
         final EditTaskDialogFragment dialogFragment = new EditTaskDialogFragment();
-        final Bundle args = new Bundle();
-        args.putString(context.getString(R.string.current_entry_key), currentEntry);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -78,8 +76,13 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
         mEditText = (EditText) dialogView.findViewById(R.id.edit_task_view);
         mEditText.setOnEditorActionListener(this);
         final Bundle args = getArguments();
-        final String entry = args.getString(getString(R.string.current_entry_key), null);
+        final String entry = args.getString(getString(R.string.current_entry_task_key), "");
+        mDialogReason = args.getInt(getString(R.string.dialog_reason_key), -1);
         mEditText.setText(entry);
+        if (entry == "")
+        {
+            mEditText.setHint(args.getString(getString(R.string.hint_key), getString(R.string.hint_text)));
+        }
         builder.setTitle("Edit Task ")
                 .setView(dialogView)
                 .setPositiveButton(context.getString(R.string.save), new DialogInterface.OnClickListener()
@@ -107,6 +110,7 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
     // Fires whenever the text-field has an action performed
     // In this case, when the "Done" button is pressed
     // REQUIRES a 'soft keyboard' (virtual keyboard)
+
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
     {
@@ -114,7 +118,17 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
         {
             // Return input text to activity
             EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
-            listener.onFinishEditDialog(mEditText.getText().toString());
+            if (mDialogReason == Utils.DialogReason.ADD.ordinal())
+            {
+                mToDoItem.setTask(mEditText.getText().toString());
+               // mToDoItem.setDateTime();
+                listener.onFinishAddDialog(mToDoItem);
+            }
+            else if (mDialogReason == Utils.DialogReason.EDIT.ordinal())
+            {
+                mToDoItem.setTask(mEditText.getText().toString());
+                listener.onFinishEditDialog(mToDoItem);
+            }
             dismiss();
             return true;
         }
