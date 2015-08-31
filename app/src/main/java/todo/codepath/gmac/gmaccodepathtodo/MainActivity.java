@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements EditTaskDialogFrag
         ft.addToBackStack(null);
         final Bundle args = new Bundle();
         args.putString(getString(R.string.hint_key), getString(R.string.hint_text));
+        args.putString(getString(R.string.dialog_title_key), getString(R.string.dialog_add_title));
         args.putInt(getString(R.string.dialog_reason_key), Utils.DialogReason.ADD.ordinal());
         // Create and show the dialog.
         EditTaskDialogFragment dialogFragment = EditTaskDialogFragment.newInstance(args);
@@ -98,26 +99,12 @@ public class MainActivity extends FragmentActivity implements EditTaskDialogFrag
         final Bundle args = new Bundle();
         args.putString(getString(R.string.current_entry_task_key), currentEntry.getTask());
         args.putString(getString(R.string.current_entry_date_time_key), currentEntry.getDateTime());
+        args.putString(getString(R.string.dialog_title_key), getString(R.string.dialog_edit_title));
         args.putInt(getString(R.string.dialog_reason_key), Utils.DialogReason.EDIT.ordinal());
         // Create and show the dialog.
         EditTaskDialogFragment dialogFragment = EditTaskDialogFragment.newInstance(args);
         dialogFragment.setArguments(args);
         dialogFragment.show(ft, "dialog");
-    }
-
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog, final Object text)
-    {
-        final String updatedText = (String) text;
-
-        if (updatedText != null && updatedText.length() > 0)
-        {
-
-         //   mToDoData.set(mPosition, updatedText);
-            mToDoListAdapter.notifyDataSetChanged();
-        }
-
-        hideKeyboard();
     }
 
     @Override

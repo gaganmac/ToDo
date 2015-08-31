@@ -7,8 +7,10 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DateTimeView;
@@ -17,36 +19,17 @@ import android.widget.TextView;
 
 public class EditTaskDialogFragment extends DialogFragment implements TextView.OnEditorActionListener
 {
+    private static final String TAG = MainActivity.class.getSimpleName();
     private ToDoItem mToDoItem = new ToDoItem("", "");
     private EditText mEditText;
     private DateTimeView mDateTimeView;
-    private EditTaskDialogListener mDialogListener;
     private int mDialogReason;
 
 
     public interface EditTaskDialogListener
     {
-        public void onDialogPositiveClick(final DialogFragment dialog, final Object text);
         void onFinishEditDialog(final ToDoItem toDoItem);
         void onFinishAddDialog(final ToDoItem toDoItem);
-    }
-
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try
-        {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mDialogListener = (EditTaskDialogListener) activity;
-        }
-        catch (ClassCastException e)
-        {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement EditTextDialogListener");
-        }
     }
 
     public EditTaskDialogFragment()
@@ -75,24 +58,50 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
         final View dialogView = View.inflate(getActivity(), R.layout.fragment_edit_task, null);
         mEditText = (EditText) dialogView.findViewById(R.id.edit_task_view);
         mEditText.setOnEditorActionListener(this);
+
         final Bundle args = getArguments();
         final String entry = args.getString(getString(R.string.current_entry_task_key), "");
+        final String title = args.getString(getString(R.string.dialog_title_key));
+        if (title == null)
+        {
+            Log.e(TAG, "Dialog needs a title!");
+            return null;
+        }
+
         mDialogReason = args.getInt(getString(R.string.dialog_reason_key), -1);
         mEditText.setText(entry);
-        if (entry == "")
+        if (entry!= null && entry.equals(""))
         {
             mEditText.setHint(args.getString(getString(R.string.hint_key), getString(R.string.hint_text)));
         }
-        builder.setTitle("Edit Task ")
+
+        builder.setTitle(title)
                 .setView(dialogView)
                 .setPositiveButton(context.getString(R.string.save), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which)
                     {
-                        mDialogListener.onDialogPositiveClick(EditTaskDialogFragment.this, mEditText.getText().toString());
+                        if (mToDoItem == null)
+                        {
+                            mToDoItem = new ToDoItem(null, null);
+                        }
+
+                        final EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
+                        if (mDialogReason == Utils.DialogReason.ADD.ordinal())
+                        {
+                            mToDoItem.setTask(mEditText.getText().toString());
+                            // mToDoItem.setDateTime();
+                            listener.onFinishAddDialog(mToDoItem);
+                        }
+                        else if (mDialogReason == Utils.DialogReason.EDIT.ordinal())
+                        {
+                            mToDoItem.setTask(mEditText.getText().toString());
+                            listener.onFinishEditDialog(mToDoItem);
+                        }
                     }
-                }).create();
+                });
+
 
         mEditText.requestFocus();
         // Show Keyboard when editText in dialog is in focus

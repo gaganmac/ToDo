@@ -4,13 +4,20 @@
     <string name="app_name">GMacCodePathToDo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="btnAddItem">Save</string>
-    <string name="hintText">Add new item</string>
+    <string name="btnAddItem">Add New Task</string>
+    <string name="hint_text">Add new item</string>
+    <string name="hintDateText">Choose target date</string>
     <string name="delete">Delete</string>
     <string name="title_activity_edit_task">EditTaskActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save">Save</string>
+    <string name="dialog_add_title">Add a new task</string>
+    <string name="dialog_edit_title">Edit this task</string>
 
-    <string name="current_entry_key">current_entry_key</string>
+    <string name="current_entry_task_key">current_entry_key</string>
+    <string name="current_entry_date_time_key">current_entry_date_time_key</string>
+    <string name="hint_key">hint_key</string>
+    <string name="dialog_reason_key">dialog_reason_key</string>
+    <string name="dialog_title_key">dialog_title_key</string>
 
 </resources>
