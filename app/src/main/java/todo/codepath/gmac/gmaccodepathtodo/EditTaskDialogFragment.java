@@ -10,19 +10,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.DateTimeView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 public class EditTaskDialogFragment extends DialogFragment implements TextView.OnEditorActionListener
 {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ToDoItem mToDoItem = new ToDoItem("", "");
     private EditText mEditText;
-    private DateTimeView mDateTimeView;
+    private DatePicker mDatePicker;
+    private TimePicker mTimePicker;
     private int mDialogReason;
 
 
@@ -57,6 +61,7 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final View dialogView = View.inflate(getActivity(), R.layout.fragment_edit_task, null);
         mEditText = (EditText) dialogView.findViewById(R.id.edit_task_view);
+        mDatePicker = (DatePicker) dialogView.findViewById(R.id.date_view);
         mEditText.setOnEditorActionListener(this);
 
         final Bundle args = getArguments();
@@ -86,19 +91,8 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
                         {
                             mToDoItem = new ToDoItem(null, null);
                         }
-
-                        final EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
-                        if (mDialogReason == Utils.DialogReason.ADD.ordinal())
-                        {
-                            mToDoItem.setTask(mEditText.getText().toString());
-                            // mToDoItem.setDateTime();
-                            listener.onFinishAddDialog(mToDoItem);
-                        }
-                        else if (mDialogReason == Utils.DialogReason.EDIT.ordinal())
-                        {
-                            mToDoItem.setTask(mEditText.getText().toString());
-                            listener.onFinishEditDialog(mToDoItem);
-                        }
+                        addDateTime();
+                        finishAddOrEdit();
                     }
                 });
 
@@ -126,22 +120,34 @@ public class EditTaskDialogFragment extends DialogFragment implements TextView.O
         if (EditorInfo.IME_ACTION_DONE == actionId)
         {
             // Return input text to activity
-            EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
-            if (mDialogReason == Utils.DialogReason.ADD.ordinal())
-            {
-                mToDoItem.setTask(mEditText.getText().toString());
-               // mToDoItem.setDateTime();
-                listener.onFinishAddDialog(mToDoItem);
-            }
-            else if (mDialogReason == Utils.DialogReason.EDIT.ordinal())
-            {
-                mToDoItem.setTask(mEditText.getText().toString());
-                listener.onFinishEditDialog(mToDoItem);
-            }
+            addDateTime();
+            finishAddOrEdit();
             dismiss();
             return true;
         }
 
         return false;
+    }
+
+    private void finishAddOrEdit()
+    {
+        EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
+        if (mDialogReason == Utils.DialogReason.ADD.ordinal())
+        {
+            mToDoItem.setTask(mEditText.getText().toString());
+            // mToDoItem.setDateTime();
+            listener.onFinishAddDialog(mToDoItem);
+        }
+        else if (mDialogReason == Utils.DialogReason.EDIT.ordinal())
+        {
+            mToDoItem.setTask(mEditText.getText().toString());
+            listener.onFinishEditDialog(mToDoItem);
+        }
+    }
+
+    private void addDateTime()
+    {
+        mDatePicker.setVisibility(View.VISIBLE);
+        mEditText.setVisibility(View.GONE);
     }
 }

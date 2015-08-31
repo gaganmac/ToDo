@@ -2,6 +2,7 @@ package todo.codepath.gmac.gmaccodepathtodo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.DateTimeView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,9 +42,10 @@ public class ToDoListAdapter extends ArrayAdapter<ToDoItem>
         }
         final ToDoListItemContainer toDoListItemContainer = ToDoListItemContainer.getToDoItemContainer(workingView);
         final TextView todoItemView = (TextView) toDoListItemContainer.getMainView().findViewById(R.id.todo_row_text);
-        final DateTimeView dateTimeView = (DateTimeView) toDoListItemContainer.getMainView().findViewById(R.id.todo_row_date);
+        final TextView dateTimeView = (TextView) toDoListItemContainer.getMainView().findViewById(R.id.todo_row_date);
         todoItemView.setText(getItem(position).getTask());
         dateTimeView.setText(getItem(position).getDateTime());
+        Log.i(TAG, "Set date time to: " + getItem(position).getDateTime());
 
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toDoListItemContainer.getMainView().getLayoutParams();

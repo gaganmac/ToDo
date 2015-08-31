@@ -42,24 +42,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:padding="8dp"
+        android:padding="5dp"
         android:id="@+id/todo_object_mainview"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/todo_row_text"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="50dp"
             android:fontFamily="Arial"
             android:textSize="@dimen/todo_item_font_size"/>
 
-        <DateTimeView
+        <TextView
             android:id="@+id/todo_row_date"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="30dp"
             android:fontFamily="Arial"
-            android:textSize="@dimen/todo_item_font_size"
-            android:layout_below="@id/todo_row_text"/>
+            android:textSize="@dimen/todo_item_date_time_font_size"
+            android:layout_below="@+id/todo_row_text"/>
 
     </RelativeLayout>
 

@@ -1,18 +1,35 @@
 package todo.codepath.gmac.gmaccodepathtodo;
 
+import android.util.Log;
+
 public class ToDoItem
 {
+    private static final String TAG = ToDoItem.class.getSimpleName();
     private String mDateTime;
     private String mTask;
 
     public ToDoItem(final String task, final String dateTime)
     {
-        mDateTime = dateTime;
+        if (dateTime == null)
+        {
+            mDateTime = Utils.getCurrentDateTime();
+        }
+
         mTask = task;
     }
 
+    /**
+     *
+     * @return Returns current date/time if it is not set.
+     */
     public String getDateTime()
     {
+        if (mDateTime == null)
+        {
+            Log.w(TAG, "Setting default date time");
+            mDateTime = Utils.getCurrentDateTime();
+        }
+
         return mDateTime;
     }
 
